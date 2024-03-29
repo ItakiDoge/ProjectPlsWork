@@ -8,49 +8,42 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class WeatherAPI {
 
-    private TextView weatherTextView;
-    private Button fetchWeatherButton;
-    private EditText editMunicipalityWeather;
-    private String municipality;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        weatherTextView = findViewById(R.id.weatherTextView);
-        fetchWeatherButton = findViewById(R.id.fetchWeatherButton);
-        editMunicipalityWeather = findViewById(R.id.editMunicipalityWeather);
-
-        fetchWeatherButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                municipality = editMunicipalityWeather.getText().toString();
-                new FetchWeatherTask().execute(municipality);
-            }
-        });
+    public interface WeatherCallback {
+        void onWeatherDataReceived(String temperature);
+        void onError(String message);
     }
 
-    private class FetchWeatherTask extends AsyncTask<String, Void, String> {
+    public static void fetchWeatherData(String municipality, WeatherCallback callback) {
+        new FetchWeatherTask(municipality, callback).execute();
+    }
 
+    private static class FetchWeatherTask extends AsyncTask<Void, Void, String> {
+        private WeatherCallback callback;
+        private String municipality;
+
+        public FetchWeatherTask(String municipality, WeatherCallback callback) {
+            this.municipality = municipality;
+            this.callback = callback;
+        }
         @Override
-        protected String doInBackground(String... cities) {
+        protected String doInBackground(Void... voids) {
             try {
-                String city = cities[0];
+                WeatherActivity weatherActivity = new WeatherActivity();
+                String municipality = weatherActivity.getMunicipality();
                 String apiKey = "f5b239cd950b7ec48958d7cd64f9ef66";
-                String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + ",fi&appid=" + apiKey + "&units=metric";
+
+                String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q="+municipality+",fi&appid=" + apiKey + "&units=metric";
 
                 URL url = new URL(apiUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -65,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 reader.close();
                 return response.toString();
             } catch (Exception e) {
-                Log.e("FetchWeatherTask", "Error: " + e.getMessage());
                 return null;
             }
         }
@@ -78,14 +70,14 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(jsonResponse);
                     JSONObject mainObject = jsonObject.getJSONObject("main");
                     double temperature = mainObject.getDouble("temp");
-                    String weatherInfo = "Current temperature in " + municipality + ": " + temperature + "°C";
-                    weatherTextView.setText(weatherInfo);
+                    callback.onWeatherDataReceived(String.valueOf(temperature));
                 } catch (JSONException e) {
-                    Log.e("FetchWeatherTask", "Error parsing JSON");
+                    callback.onError("Error parsing JSON");
                 }
             } else {
-                Log.e("FetchWeatherTask", "Error fetching weather data");
+                callback.onError("Error fetching weather data");
             }
         }
     }
+
 }

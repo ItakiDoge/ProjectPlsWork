@@ -1,0 +1,136 @@
+Index: app/src/main/java/com/example/projectplswork/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.projectplswork;\r\n\r\nimport android.os.Bundle;\r\n\r\nimport androidx.activity.EdgeToEdge;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.graphics.Insets;\r\nimport androidx.core.view.ViewCompat;\r\nimport androidx.core.view.WindowInsetsCompat;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        EdgeToEdge.enable(this);\r\n        setContentView(R.layout.activity_main);\r\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\r\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\r\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\r\n            return insets;\r\n//salut\\\r\n            //dasfdjioa8012q\r\n        });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/projectplswork/MainActivity.java b/app/src/main/java/com/example/projectplswork/MainActivity.java
+--- a/app/src/main/java/com/example/projectplswork/MainActivity.java	(revision 1cfc5210c4250c4df1c41a09fe1403a6eaf91c9f)
++++ b/app/src/main/java/com/example/projectplswork/MainActivity.java	(date 1711715990046)
+@@ -1,26 +1,31 @@
+ package com.example.projectplswork;
+ 
+ import android.os.Bundle;
+-
+-import androidx.activity.EdgeToEdge;
++import android.view.View;
++import android.widget.Button;
++import android.widget.Toast;
+ import androidx.appcompat.app.AppCompatActivity;
+-import androidx.core.graphics.Insets;
+-import androidx.core.view.ViewCompat;
+-import androidx.core.view.WindowInsetsCompat;
+ 
+ public class MainActivity extends AppCompatActivity {
+ 
++    private Button fetchWeatherButton;
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        EdgeToEdge.enable(this);
+         setContentView(R.layout.activity_main);
+-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+-            return insets;
+-//salut\
+-            //dasfdjioa8012q
++
++
++        fetchWeatherButton = findViewById(R.id.fetchWeatherButton);
++        fetchWeatherButton.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                fetchWeatherData();
++            }
+         });
+     }
+-}
+\ No newline at end of file
++
++    private void fetchWeatherData() {
++        Toast.makeText(MainActivity.this, "Fetching weather data...", Toast.LENGTH_SHORT).show();
++    }
++}
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/main\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".MainActivity\">\r\n\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Hello World!\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 1cfc5210c4250c4df1c41a09fe1403a6eaf91c9f)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1711716007587)
+@@ -1,19 +1,17 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:id="@+id/main"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     tools:context=".MainActivity">
+ 
+-    <TextView
++    <!-- Add a button to fetch weather data -->
++    <Button
++        android:id="@+id/fetchWeatherButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:text="Hello World!"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
++        android:text="Fetch Weather Data"
++        android:layout_centerInParent="true" />
+ 
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++</RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/projectplswork/WeatherAPI.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/projectplswork/WeatherAPI.java b/app/src/main/java/com/example/projectplswork/WeatherAPI.java
+new file mode 100644
+--- /dev/null	(date 1711716096334)
++++ b/app/src/main/java/com/example/projectplswork/WeatherAPI.java	(date 1711716096334)
+@@ -0,0 +1,30 @@
++package com.example.projectplswork;
++
++import android.util.Log;
++
++import java.io.BufferedReader;
++import java.io.IOException;
++import java.io.InputStreamReader;
++import java.net.HttpURLConnection;
++import java.net.URL;
++public class WeatherAPI {
++    private String API_KEY = "f5b239cd950b7ec48958d7cd64f9ef66";
++    private String API_SITE = "https://api.openweathermap.org/data/2.5/weather?q=Helsinki,fi&appid=" + API_KEY;
++    public void main(String[] args) {
++        try {
++            URL url = new URL(API_SITE);
++            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
++            connection.setRequestMethod("GET");
++            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
++            StringBuilder response = new StringBuilder();
++            String line;
++            while ((line = reader.readLine()) != null) {
++                response.append(line);
++            }
++            reader.close();
++            Log.i("a","Success");
++        } catch (IOException e) {
++            System.out.println("ERR");
++        }
++    }
++}
+\ No newline at end of file
